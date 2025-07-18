@@ -40,9 +40,8 @@ Before starting, ensure you have:
 
 #### 1.1 Initialize Project
 ```bash
-# Create new Vite React project with TypeScript
-npm create vite@latest memory-visualizer -- --template react-ts
-cd memory-visualizer
+# Note: Project structure has been flattened - React files are now at root level
+# No need to create subdirectory or cd into it
 npm install
 ```
 
@@ -1554,9 +1553,9 @@ export default defineConfig({
 
 ### 3.1 Complete File Structure
 ```
-memory-visualizer/
+memory-visualiser/ (root)
 ├── public/
-│   └── index.html
+│   └── vite.svg
 ├── src/
 │   ├── components/
 │   │   ├── Layout.tsx
@@ -1582,10 +1581,18 @@ memory-visualizer/
 │   │   └── globals.css
 │   ├── App.tsx
 │   └── main.tsx
+├── CLAUDE.md
+├── engineering_principles.md
+├── memory-graph-requirements.md
+├── mvp-implementation-plan.md
 ├── package.json
+├── index.html
 ├── vite.config.ts
 ├── tailwind.config.js
 ├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── eslint.config.js
 └── jest.config.js
 ```
 
