@@ -1,8 +1,9 @@
 // MCP Memory Server Response Types
 export interface Entity {
-  id: string;
+  id?: string;
   name: string;
-  type: string;
+  type?: string;
+  entityType?: string;
   observations: string[];
 }
 

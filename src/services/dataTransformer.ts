@@ -3,7 +3,9 @@ import type { MemoryGraph, GraphData, GraphNode, GraphLink, Entity, Relation } f
 export class DataTransformer {
   static transformToGraphData(memoryGraph: MemoryGraph): GraphData {
     const nodes = this.createNodes(memoryGraph.entities);
-    const links = this.createLinks(memoryGraph.relations);
+    const nodeIds = new Set(nodes.map(n => n.id));
+    const links = this.createLinks(memoryGraph.relations, nodeIds);
+    
     
     return { nodes, links };
   }
@@ -14,26 +16,42 @@ export class DataTransformer {
       'place': '#7c3aed',
       'concept': '#f59e0b',
       'event': '#10b981',
+      'project': '#e74c3c',
+      'preference': '#9b59b6',
+      'Reference Guide': '#f39c12',
+      'Workflow Guide': '#2ecc71',
+      'schema': '#95a5a6',
       'default': '#6b7280'
     };
 
-    return entities.map(entity => ({
-      id: entity.id,
-      name: entity.name,
-      type: entity.type,
-      observations: entity.observations,
-      val: Math.max(5, entity.observations.length), // Node size based on observations
-      color: nodeColors[entity.type] || nodeColors.default
-    }));
+    return entities.map(entity => {
+      // Handle different entity formats from MCP server
+      const entityType = (entity as any).entityType || entity.type || 'default';
+      const entityId = entity.id || entity.name; // Use name as ID if no ID present
+      
+      return {
+        id: entityId,
+        name: entity.name,
+        type: entityType,
+        observations: entity.observations,
+        val: Math.max(5, entity.observations.length), // Node size based on observations
+        color: nodeColors[entityType] || nodeColors.default
+      };
+    });
   }
 
-  private static createLinks(relations: Relation[]): GraphLink[] {
-    return relations.map(relation => ({
-      source: relation.from,
-      target: relation.to,
-      type: relation.relationType,
-      value: 1 // Default link thickness
-    }));
+  private static createLinks(relations: Relation[], nodeIds: Set<string>): GraphLink[] {
+    return relations
+      .filter(relation => {
+        const hasValidNodes = nodeIds.has(relation.from) && nodeIds.has(relation.to);
+        return hasValidNodes;
+      })
+      .map(relation => ({
+        source: relation.from,
+        target: relation.to,
+        type: relation.relationType,
+        value: 1 // Default link thickness
+      }));
   }
 
   static optimizeForVisualization(data: GraphData, maxNodes = 100): GraphData {
@@ -51,9 +69,17 @@ export class DataTransformer {
     const nodeIds = new Set(topNodes.map(n => n.id));
 
     // Filter links to only include those between kept nodes
-    const filteredLinks = data.links.filter(link => 
-      nodeIds.has(link.source.toString()) && nodeIds.has(link.target.toString())
-    );
+    const filteredLinks = data.links.filter(link => {
+      const sourceId = typeof link.source === 'string' ? link.source : link.source.toString();
+      const targetId = typeof link.target === 'string' ? link.target : link.target.toString();
+      const hasValidNodes = nodeIds.has(sourceId) && nodeIds.has(targetId);
+      
+      if (!hasValidNodes) {
+        console.warn(`Filtered out link: ${sourceId} -> ${targetId} (missing node)`);
+      }
+      
+      return hasValidNodes;
+    });
 
     return {
       nodes: topNodes,
