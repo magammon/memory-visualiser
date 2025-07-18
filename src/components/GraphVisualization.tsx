@@ -10,7 +10,7 @@ export const GraphVisualization: React.FC = () => {
   const { data, loading, error, refetch } = useMemoryData();
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
-  const graphRef = useRef<any>();
+  const graphRef = useRef<any>(null);
 
   const handleNodeClick = useCallback((node: GraphNode) => {
     setSelectedNode(node);

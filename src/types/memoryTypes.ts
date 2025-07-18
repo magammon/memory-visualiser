@@ -25,6 +25,8 @@ export interface GraphNode {
   observations: string[];
   val?: number; // Node size
   color?: string; // Node color
+  x?: number; // Node position
+  y?: number; // Node position
 }
 
 export interface GraphLink {
