@@ -12,3 +12,5 @@ This document lays out the common code and engineering principles that you must 
 - Liskov Substitution Principle
 - Interface Segregation Principle
 - Dependency Inversion Principle
+## Run the tests!
+- If the project has tests - run them!
