@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { GraphNode } from '../types/memoryTypes';
 
 interface EntityDetailPanelProps {
@@ -7,13 +7,32 @@ interface EntityDetailPanelProps {
 }
 
 export const EntityDetailPanel: React.FC<EntityDetailPanelProps> = ({ node, onClose }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 10);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(onClose, 300);
+  };
+
   return (
-    <div className="w-80 bg-obsidian-surface border-l border-obsidian-border flex flex-col">
+    <div 
+      className={`
+        fixed right-0 top-0 w-[20vw] h-screen z-50
+        bg-obsidian-surface border-l border-obsidian-border flex flex-col
+        transform transition-transform duration-300 ease-out
+        ${isVisible ? 'translate-x-0' : 'translate-x-[20vw]'}
+      `}
+    >
       {/* Header */}
       <div className="p-4 border-b border-obsidian-border flex items-center justify-between">
         <h2 className="text-lg font-semibold text-obsidian-text truncate">{node.name}</h2>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="text-obsidian-text hover:text-white transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
