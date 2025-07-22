@@ -70,8 +70,8 @@ export class DataTransformer {
 
     // Filter links to only include those between kept nodes
     const filteredLinks = data.links.filter(link => {
-      const sourceId = typeof link.source === 'string' ? link.source : link.source.toString();
-      const targetId = typeof link.target === 'string' ? link.target : link.target.toString();
+      const sourceId = typeof link.source === 'string' ? link.source : String(link.source);
+      const targetId = typeof link.target === 'string' ? link.target : String(link.target);
       const hasValidNodes = nodeIds.has(sourceId) && nodeIds.has(targetId);
       
       if (!hasValidNodes) {

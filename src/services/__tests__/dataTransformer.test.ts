@@ -1,5 +1,5 @@
 import { DataTransformer } from '../dataTransformer';
-import { MemoryGraph } from '../../types/memoryTypes';
+import type { MemoryGraph } from '../../types/memoryTypes';
 
 describe('DataTransformer', () => {
   const mockMemoryGraph: MemoryGraph = {
