@@ -1,3 +1,9 @@
+interface MemoryInfo {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
 export class PerformanceMonitor {
   private static measurements: Map<string, number> = new Map();
 
@@ -36,9 +42,9 @@ export class PerformanceMonitor {
     return result;
   }
 
-  static getMemoryUsage(): any | null {
+  static getMemoryUsage(): MemoryInfo | null {
     if ('memory' in performance) {
-      return (performance as any).memory;
+      return (performance as Performance & { memory: MemoryInfo }).memory;
     }
     return null;
   }
@@ -55,7 +61,7 @@ export class PerformanceMonitor {
   }
 }
 
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void => {
@@ -66,7 +72,7 @@ export const debounce = <T extends (...args: any[]) => any>(
   };
 };
 
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void => {

@@ -26,7 +26,7 @@ export class DataTransformer {
 
     return entities.map(entity => {
       // Handle different entity formats from MCP server
-      const entityType = (entity as any).entityType || entity.type || 'default';
+      const entityType = (entity as Entity & { entityType?: string }).entityType || entity.type || 'default';
       const entityId = entity.id || entity.name; // Use name as ID if no ID present
       
       return {

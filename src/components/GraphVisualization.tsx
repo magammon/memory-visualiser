@@ -10,7 +10,7 @@ export const GraphVisualization: React.FC = () => {
   const { data, loading, error, refetch } = useMemoryData();
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
-  const graphRef = useRef<any>(null);
+  const graphRef = useRef(null);
 
   const handleNodeClick = useCallback((node: GraphNode) => {
     setSelectedNode(node);
@@ -79,7 +79,8 @@ export const GraphVisualization: React.FC = () => {
       {/* Main graph area */}
       <div className="flex-1 relative">
         <ForceGraph2D
-          ref={graphRef}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ref={graphRef as React.MutableRefObject<any>}
           graphData={data}
           nodeId="id"
           nodeLabel={getNodeLabel}
